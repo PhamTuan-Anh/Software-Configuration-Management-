@@ -15,15 +15,6 @@ public class AuthController {
     @Autowired
     private UserRepository userRepository;
 
-    // ==================== TRANG CHỦ ====================
-    @GetMapping("/")
-    public String home(HttpSession session) {
-        if (session.getAttribute("loggedInUser") != null) {
-            return "redirect:/dashboard";
-        }
-        return "redirect:/login";
-    }
-
     // ==================== ĐĂNG NHẬP ====================
     @GetMapping("/login")
     public String showLoginPage(HttpSession session, Model model) {
