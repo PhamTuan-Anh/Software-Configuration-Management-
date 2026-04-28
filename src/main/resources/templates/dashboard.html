@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - TechStore</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #f5f6fa; }
+        .navbar {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white; padding: 16px 32px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .navbar h1 { font-size: 22px; }
+        .navbar a {
+            color: white; text-decoration: none;
+            background: rgba(255,255,255,0.2);
+            padding: 8px 18px; border-radius: 8px; font-size: 14px;
+        }
+        .navbar a:hover { background: rgba(255,255,255,0.35); }
+        .content { padding: 40px; max-width: 800px; margin: 0 auto; }
+        .welcome-card {
+            background: white; border-radius: 16px;
+            padding: 40px; text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        .welcome-card h2 { color: #333; font-size: 26px; }
+        .welcome-card p { color: #888; margin-top: 10px; }
+        .avatar {
+            width: 80px; height: 80px; border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 32px; color: white; margin: 0 auto 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="navbar">
+    <h1>🛒 TechStore</h1>
+    <a href="/logout">Đăng xuất</a>
+</div>
+<div class="content">
+    <div class="welcome-card">
+        <div class="avatar">👤</div>
+        <h2>Chào mừng, <span th:text="${username}">User</span>!</h2>
+        <p>Bạn đã đăng nhập thành công vào TechStore.</p>
+    </div>
+</div>
+</body>
+</html>
