@@ -29,6 +29,7 @@ public class AuthController {
                               @RequestParam String password,
                               HttpSession session,
                               Model model) {
+    	
         // Tìm user theo username
         var userOpt = userRepository.findByUsername(username);
 
@@ -47,7 +48,7 @@ public class AuthController {
 
         // Lưu session
         session.setAttribute("loggedInUser", user.getUsername());
-        return "redirect:/dashboard";
+        return "redirect:/";
     }
 
     // ==================== ĐĂNG KÝ ====================
