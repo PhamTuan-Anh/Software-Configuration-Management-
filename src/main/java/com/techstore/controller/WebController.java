@@ -2,6 +2,7 @@ package com.techstore.controller;
 
 import com.techstore.model.Product;
 import com.techstore.repository.ProductRepository;
+import com.techstore.service.CartService; // Nhập thêm thư viện Giỏ hàng
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +16,10 @@ public class WebController {
     @Autowired
     private ProductRepository productRepository;
 
+    // Tiêm CartService vào để lấy dữ liệu giỏ hàng
+    @Autowired
+    private CartService cartService; 
+
     @GetMapping("/")
     public String showHomePage(Model model) {
         // 1. Lấy toàn bộ linh kiện từ SQL lên
@@ -23,7 +28,10 @@ public class WebController {
         // 2. Gửi nguyên danh sách đó sang file index.html
         model.addAttribute("products", products);
         
-        // 3. Mở giao diện
+        // 3. Lấy tổng số lượng hàng trong giỏ và gửi sang giao diện (để hiện bong bóng đỏ)
+        model.addAttribute("cartCount", cartService.getCount());
+        
+        // 4. Mở giao diện
         return "index";
     }
 }

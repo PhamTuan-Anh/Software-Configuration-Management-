@@ -22,21 +22,25 @@
             width: 100%;
             max-width: 400px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            position: relative; /* Lệnh quan trọng để ghim mũi tên bên trong Card */
         }
-        .logo { text-align: center; margin-bottom: 25px; }
+        
+        /* Style mới cho mũi tên Quay lại */
+        .back-arrow {
+            position: absolute;
+            top: 24px;
+            left: 24px;
+            color: #94a3b8;
+            transition: all 0.2s;
+        }
+        .back-arrow:hover {
+            color: #667eea;
+            transform: translateX(-4px); /* Hiệu ứng lùi lại cực mượt */
+        }
+
+        .logo { text-align: center; margin-bottom: 25px; margin-top: 10px; }
         .logo h1 { color: #667eea; font-size: 28px; font-weight: 800; }
         .logo p { color: #888; font-size: 14px; }
-        
-        .back-home {
-            display: flex;
-            align-items: center;
-            text-decoration: none;
-            color: #888;
-            font-size: 14px;
-            margin-bottom: 20px;
-            transition: color 0.2s;
-        }
-        .back-home:hover { color: #667eea; }
 
         h2 { font-size: 20px; color: #333; margin-bottom: 20px; text-align: center; }
         
@@ -76,11 +80,10 @@
 </head>
 <body>
 <div class="card">
-    <a th:href="@{/}" class="back-home">
-        <svg style="width:16px; height:16px; margin-right:5px" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+    <a th:href="@{/}" class="back-arrow" title="Quay lại trang chủ">
+        <svg style="width:24px; height:24px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
         </svg>
-        Quay lại cửa hàng
     </a>
 
     <div class="logo">
@@ -115,4 +118,4 @@
     </div>
 </div>
 </body>
-</html>
+</html>S

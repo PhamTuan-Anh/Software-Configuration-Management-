@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giỏ hàng của bạn - TechStore</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+    <header class="bg-white border-b px-8 py-4 flex justify-between items-center shadow-sm">
+        <a th:href="@{/}" class="flex items-center gap-2 cursor-pointer text-decoration-none hover:opacity-80 transition">
+            <div class="bg-gray-900 text-white w-10 h-10 rounded-lg flex items-center justify-center font-black text-xl">PC</div>
+            <span class="text-2xl font-bold text-gray-900">TechStore</span>
+        </a>
+        <a th:href="@{/}" class="text-blue-600 font-bold hover:underline">← Tiếp tục mua sắm</a>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-6 py-12">
+        <h1 class="text-3xl font-black text-gray-900 mb-8 flex items-center gap-3">
+            🛒 Giỏ hàng của bạn
+        </h1>
+
+        <div class="bg-white rounded-[32px] shadow-xl shadow-gray-100 border border-gray-50 overflow-hidden">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-gray-50 border-b border-gray-100 text-sm">
+                        <th class="p-5 font-bold text-gray-500">Sản phẩm</th>
+                        <th class="p-5 font-bold text-gray-500 text-center">Đơn giá</th>
+                        <th class="p-5 font-bold text-gray-500 text-center">Số lượng</th>
+                        <th class="p-5 font-bold text-gray-500 text-center">Thành tiền</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:if="${#lists.isEmpty(cartItems)}">
+                        <td colspan="4" class="p-10 text-center text-gray-500 font-semibold">
+                            Giỏ hàng của bạn đang trống. Hãy ra ngoài mua sắm thêm nhé!
+                        </td>
+                    </tr>
+
+                    <tr th:each="item : ${cartItems}" class="border-b border-gray-50 hover:bg-gray-50 transition">
+                        <td class="p-5 flex items-center gap-4">
+                            <div class="w-16 h-16 bg-white border border-gray-100 rounded-xl flex items-center justify-center p-2 shadow-sm">
+                                <img th:src="${item.imageUrl}" class="max-h-full object-contain mix-blend-multiply" />
+                            </div>
+                            <span class="font-bold text-gray-900" th:text="${item.name}">Tên SP</span>
+                        </td>
+                        
+                        <td class="p-5 text-center font-semibold text-gray-600" th:text="${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'POINT')} + 'đ'">0đ</td>
+                        
+                        <td class="p-5 text-center font-bold text-gray-900">
+                            <span class="bg-gray-100 px-4 py-2 rounded-lg" th:text="${item.quantity}">1</span>
+                        </td>
+                        
+                        <td class="p-5 text-center font-black text-blue-600 text-lg" th:text="${#numbers.formatDecimal(item.subTotal, 0, 'COMMA', 0, 'POINT')} + 'đ'">0đ</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="p-8 bg-gray-50 flex justify-between items-center border-t border-gray-100">
+                <div>
+                    <span class="text-gray-500 font-semibold uppercase tracking-wider text-sm">Tổng thanh toán</span>
+                    <div class="text-3xl font-black text-blue-600 mt-1" th:text="${#numbers.formatDecimal(totalAmount, 0, 'COMMA', 0, 'POINT')} + 'đ'">0đ</div>
+                </div>
+                <button th:if="${!#lists.isEmpty(cartItems)}" class="bg-black text-white px-8 py-4 rounded-2xl font-bold hover:scale-105 transition shadow-2xl flex items-center gap-2">
+                    Thanh toán ngay 🚀
+                </button>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>
