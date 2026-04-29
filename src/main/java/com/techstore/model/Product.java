@@ -19,10 +19,15 @@ public class Product {
     @Column(columnDefinition = "TEXT") 
     private String description;
 
+    private String manufactureDate;
+    
+    private String brand;
+    private String warranty;
+
     // Constructors
     public Product() {}
 
-    public Product(Long id, String name, String category, Double price, String specs, String imageUrl, String description) {
+    public Product(Long id, String name, String category, Double price, String specs, String imageUrl, String description, String manufactureDate) {
         this.id = id;
         this.name = name;
         this.category = category;
@@ -30,6 +35,7 @@ public class Product {
         this.specs = specs;
         this.imageUrl = imageUrl;
         this.description = description;
+        this.manufactureDate = manufactureDate;
     }
 
     // Getters and Setters 
@@ -47,4 +53,11 @@ public class Product {
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
+    
+    public String getManufactureDate() { return manufactureDate; }
+    public void setManufactureDate(String manufactureDate) { this.manufactureDate = manufactureDate; }
+    public String getBrand() { return brand; }
+    public void setBrand(String brand) { this.brand = brand; }
+    public String getWarranty() { return warranty; }
+    public void setWarranty(String warranty) { this.warranty = warranty; }
 }

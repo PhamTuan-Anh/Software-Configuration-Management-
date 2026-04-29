@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${product.name} + ' - TechStore'">Chi tiết sản phẩm</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style> body { font-family: 'Inter', sans-serif; } </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+    <header class="bg-white border-b px-8 py-4 flex justify-between items-center shadow-sm">
+        <a th:href="@{/}" class="flex items-center gap-2 text-decoration-none hover:opacity-80 transition">
+            <div class="bg-gray-900 text-white w-10 h-10 rounded-lg flex items-center justify-center font-black text-xl">PC</div>
+            <span class="text-2xl font-bold text-gray-900">TechStore</span>
+        </a>
+        <a th:href="@{/cart}" class="text-gray-600 hover:text-blue-600 font-bold flex items-center gap-2">
+            🛒 Giỏ hàng
+        </a>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-6 py-12">
+        <a th:href="@{/}" class="inline-flex items-center gap-2 text-gray-500 hover:text-blue-600 mb-8 font-semibold transition">
+            <span>←</span> Trở về danh sách
+        </a>
+
+        <div class="bg-white rounded-[32px] shadow-xl shadow-gray-100 p-8 lg:p-12 border border-gray-50">
+            <div class="flex flex-col lg:flex-row gap-12">
+                
+                <div class="lg:w-1/2 flex items-center justify-center bg-gray-50 rounded-3xl p-8">
+                    <img th:src="${product.imageUrl}" alt="Hình sản phẩm" class="w-full max-w-sm object-contain mix-blend-multiply hover:scale-105 transition duration-300">
+                </div>
+
+                <div class="lg:w-1/2 flex flex-col justify-center">
+                    
+                    <div class="flex gap-2 mb-4">
+                        <div class="bg-gray-100 text-gray-600 font-bold px-4 py-1.5 rounded-full w-max text-xs uppercase tracking-wider" th:text="${product.category != null ? product.category : 'Linh kiện'}">Danh mục</div>
+                        <div class="bg-green-50 text-green-600 font-bold px-4 py-1.5 rounded-full w-max text-xs uppercase tracking-wider">Sẵn hàng</div>
+                    </div>
+                    
+                    <h1 class="text-3xl lg:text-4xl font-black text-gray-900 leading-tight mb-4" th:text="${product.name}">Tên Sản Phẩm</h1>
+                    <div class="text-4xl font-black text-blue-600 mb-6" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + 'đ'">0đ</div>
+                    
+                    <div class="bg-gray-50 rounded-2xl p-5 mb-6 border border-gray-100">
+                        <h3 class="font-bold text-gray-900 mb-3 text-sm uppercase tracking-wider border-b border-gray-200 pb-2">Thông số cơ bản</h3>
+                        <ul class="text-sm text-gray-700 space-y-3 mt-3">
+                            <li class="flex justify-between items-center">
+                                <span class="text-gray-500 font-medium">Thương hiệu:</span>
+                                <span class="font-bold text-right" th:text="${product.brand != null ? product.brand : 'Đang cập nhật'}">...</span>
+                            </li>
+                            <li class="flex justify-between items-center">
+                                <span class="text-gray-500 font-medium">Bảo hành:</span>
+                                <span class="font-bold text-right" th:text="${product.warranty != null ? product.warranty : 'Đang cập nhật'}">...</span>
+                            </li>
+                            <li class="flex justify-between items-center">
+                                <span class="text-gray-500 font-medium">Hiệu năng:</span>
+                                <span class="font-bold text-right max-w-[60%]" th:text="${product.specs != null ? product.specs : 'Đang cập nhật'}">...</span>
+                            </li>
+                            <li class="flex justify-between items-center">
+                                <span class="text-gray-500 font-medium">Ngày sản xuất:</span>
+                                <span class="font-bold text-right" th:text="${product.manufactureDate != null ? product.manufactureDate : 'Đang cập nhật'}">...</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="border-t border-gray-100 pt-6 mb-8">
+                        <h3 class="font-bold text-gray-900 mb-3 text-lg">Đặc điểm nổi bật:</h3>
+                        <div class="text-gray-500 leading-relaxed text-sm space-y-2" th:utext="${product.description != null ? product.description : 'Đang cập nhật mô tả chi tiết cho sản phẩm này...'}"></div>
+                    </div>
+
+                    <a th:href="@{/cart/add/{id}(id=${product.id})}" class="bg-black text-white px-8 py-4 rounded-2xl font-bold hover:scale-105 transition shadow-2xl flex items-center justify-center gap-3 text-lg cursor-pointer text-center">
+                        <span>+</span> Thêm vào giỏ hàng
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>
