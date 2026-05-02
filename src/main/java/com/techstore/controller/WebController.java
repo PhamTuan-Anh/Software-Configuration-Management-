@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable; // <-- ĐÃ THÊM DÒNG NÀY
-
+import org.springframework.web.bind.annotation.PathVariable; 
+import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 @Controller
@@ -52,4 +52,23 @@ public class WebController {
         // 3. Mở file detail.html
         return "detail";
     }
+    @GetMapping("/shop")
+    public String showShopPage(@RequestParam(name = "category", required = false) String category, Model model) {
+        List<Product> products;
+        
+        // Nếu có chọn danh mục thì lọc, không thì lấy tất cả
+        if (category != null && !category.isEmpty()) {
+            products = productRepository.findByCategory(category);
+            model.addAttribute("currentCategory", category); 
+        } else {
+            products = productRepository.findAll();
+            model.addAttribute("currentCategory", "Tất cả sản phẩm");
+        }
+        
+        model.addAttribute("products", products);
+        model.addAttribute("cartCount", cartService.getCount());
+        
+        return "shop"; 
+    }
+    
 }
