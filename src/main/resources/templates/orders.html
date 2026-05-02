@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Đơn hàng của tôi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 p-10">
+    <div class="max-w-4xl mx-auto bg-white p-8 rounded-3xl shadow-sm">
+        <h2 class="text-2xl font-black mb-6">📦 Lịch sử mua hàng</h2>
+        <p class="text-gray-500 italic">Bạn chưa có đơn hàng nào.</p>
+        <a th:href="@{/}" class="mt-6 inline-block text-blue-600 font-bold">Quay lại mua sắm</a>
+    </div>
+</body>
+</html>

@@ -3,6 +3,8 @@ package com.techstore.controller;
 import com.techstore.model.Product;
 import com.techstore.repository.ProductRepository;
 import com.techstore.service.CartService;
+import com.techstore.repository.UserRepository;
+import jakarta.servlet.http.HttpSession; 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,12 +18,20 @@ public class WebController {
 
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private CartService cartService; 
 
     @GetMapping("/")
-    public String showHomePage(Model model) {
+    public String showHomePage(Model model, HttpSession session) { // Thêm HttpSession
+        
+        // --- BỔ SUNG LẤY THÔNG TIN ĐĂNG NHẬP ---
+        String loggedInUser = (String) session.getAttribute("loggedInUser");
+        model.addAttribute("username", loggedInUser); // Truyền sang HTML
+        // ---------------------------------------
+
         // 1. Lấy toàn bộ linh kiện từ SQL lên
         List<Product> products = productRepository.findAll();
         
@@ -37,7 +47,13 @@ public class WebController {
 
     // Hàm mở trang chi tiết sản phẩm
     @GetMapping("/product/{id}")
-    public String viewProductDetail(@PathVariable("id") Long id, Model model) {
+    public String viewProductDetail(@PathVariable("id") Long id, Model model, HttpSession session) { // Thêm HttpSession
+        
+        // --- BỔ SUNG LẤY THÔNG TIN ĐĂNG NHẬP ---
+        String loggedInUser = (String) session.getAttribute("loggedInUser");
+        model.addAttribute("username", loggedInUser);
+        // ---------------------------------------
+
         // 1. Tìm sản phẩm trong CSDL theo ID
         Product product = productRepository.findById(id).orElse(null);
         
@@ -52,15 +68,33 @@ public class WebController {
         // 3. Mở file detail.html
         return "detail";
     }
+    
     @GetMapping("/shop")
-    public String showShopPage(@RequestParam(name = "category", required = false) String category, Model model) {
+    public String showShopPage(
+            @RequestParam(name = "category", required = false) String category,
+            @RequestParam(name = "keyword", required = false) String keyword,
+            Model model, 
+            HttpSession session) { // Thêm HttpSession
+        
+        // --- BỔ SUNG LẤY THÔNG TIN ĐĂNG NHẬP ---
+        String loggedInUser = (String) session.getAttribute("loggedInUser");
+        model.addAttribute("username", loggedInUser);
+        // ---------------------------------------
+
         List<Product> products;
         
-        // Nếu có chọn danh mục thì lọc, không thì lấy tất cả
-        if (category != null && !category.isEmpty()) {
+        // Ưu tiên 1: Nếu người dùng có gõ chữ tìm kiếm
+        if (keyword != null && !keyword.isEmpty()) {
+            products = productRepository.findByNameContainingIgnoreCase(keyword);
+            model.addAttribute("currentCategory", "Kết quả tìm kiếm: " + keyword);
+        } 
+        // Ưu tiên 2: Nếu người dùng bấm vào danh mục bên trái
+        else if (category != null && !category.isEmpty()) {
             products = productRepository.findByCategory(category);
-            model.addAttribute("currentCategory", category); 
-        } else {
+            model.addAttribute("currentCategory", category);
+        } 
+        // Không tìm cũng không lọc -> Hiện tất cả
+        else {
             products = productRepository.findAll();
             model.addAttribute("currentCategory", "Tất cả sản phẩm");
         }
@@ -68,7 +102,39 @@ public class WebController {
         model.addAttribute("products", products);
         model.addAttribute("cartCount", cartService.getCount());
         
-        return "shop"; 
+        return "shop";
     }
-    
+ // ================= TRANG THÔNG TIN CÁ NHÂN =================
+    @GetMapping("/profile")
+    public String viewProfile(HttpSession session, Model model) {
+        String loggedInUser = (String) session.getAttribute("loggedInUser");
+        
+        if (loggedInUser == null) {
+            return "redirect:/login"; 
+        }
+
+   
+        var user = userRepository.findByUsername(loggedInUser).orElse(null);
+        model.addAttribute("user", user);
+        
+        // Truyền dữ liệu để hiện Header
+        model.addAttribute("username", loggedInUser);
+        model.addAttribute("cartCount", cartService.getCount());
+        
+        return "profile"; // Sẽ mở file profile.html
+    }
+
+    // ================= TRANG LỊCH SỬ MUA HÀNG =================
+    @GetMapping("/orders")
+    public String viewOrders(HttpSession session, Model model) {
+        String loggedInUser = (String) session.getAttribute("loggedInUser");
+        if (loggedInUser == null) {
+            return "redirect:/login";
+        }
+
+        model.addAttribute("username", loggedInUser);
+        model.addAttribute("cartCount", cartService.getCount());
+        
+        return "orders"; // Sẽ mở file orders.html
+    }
 }

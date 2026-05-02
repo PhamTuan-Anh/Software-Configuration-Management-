@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Thông tin cá nhân</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+    <div class="max-w-2xl mx-auto mt-10 p-8 bg-white rounded-3xl shadow-lg">
+        <h2 class="text-2xl font-black mb-6">👤 Thông tin tài khoản</h2>
+        <div class="space-y-4" th:if="${user != null}">
+            <p><strong>Tên đăng nhập:</strong> <span th:text="${user.username}"></span></p>
+            <p><strong>Email:</strong> <span th:text="${user.email}"></span></p>
+            <a th:href="@{/}" class="inline-block mt-4 text-blue-600 font-bold">← Quay lại trang chủ</a>
+        </div>
+    </div>
+</body>
+</html>

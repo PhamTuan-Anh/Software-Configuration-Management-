@@ -8,19 +8,20 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; }
+        a { text-decoration: none; }
     </style>
 </head>
 <body class="bg-gray-50 min-h-screen">
 
     <header class="bg-white border-b px-8 py-4 flex justify-between items-center shadow-sm">
-        <a th:href="@{/}" class="flex items-center gap-2 cursor-pointer text-decoration-none hover:opacity-80 transition">
+        <a th:href="@{/}" class="flex items-center gap-2 cursor-pointer hover:opacity-80 transition">
             <div class="bg-gray-900 text-white w-10 h-10 rounded-lg flex items-center justify-center font-black text-xl">PC</div>
             <span class="text-2xl font-bold text-gray-900">TechStore</span>
         </a>
         <a th:href="@{/}" class="text-blue-600 font-bold hover:underline">← Tiếp tục mua sắm</a>
     </header>
 
-    <main class="max-w-4xl mx-auto px-6 py-12">
+    <main class="max-w-5xl mx-auto px-6 py-12">
         <h1 class="text-3xl font-black text-gray-900 mb-8 flex items-center gap-3">
             🛒 Giỏ hàng của bạn
         </h1>
@@ -33,11 +34,14 @@
                         <th class="p-5 font-bold text-gray-500 text-center">Đơn giá</th>
                         <th class="p-5 font-bold text-gray-500 text-center">Số lượng</th>
                         <th class="p-5 font-bold text-gray-500 text-center">Thành tiền</th>
+                        <!-- Bổ sung cột Thao tác -->
+                        <th class="p-5 font-bold text-gray-500 text-center">Thao tác</th>
                     </tr>
                 </thead>
                 <tbody>
+                    <!-- Đổi colspan từ 4 thành 5 cho khớp số cột -->
                     <tr th:if="${#lists.isEmpty(cartItems)}">
-                        <td colspan="4" class="p-10 text-center text-gray-500 font-semibold">
+                        <td colspan="5" class="p-10 text-center text-gray-500 font-semibold">
                             Giỏ hàng của bạn đang trống. Hãy ra ngoài mua sắm thêm nhé!
                         </td>
                     </tr>
@@ -50,13 +54,34 @@
                             <span class="font-bold text-gray-900" th:text="${item.name}">Tên SP</span>
                         </td>
                         
-                        <td class="p-5 text-center font-semibold text-gray-600" th:text="${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'POINT')} + 'đ'">0đ</td>
-                        
-                        <td class="p-5 text-center font-bold text-gray-900">
-                            <span class="bg-gray-100 px-4 py-2 rounded-lg" th:text="${item.quantity}">1</span>
-                        </td>
+						<td class="p-5 text-center font-black text-blue-600 text-lg" th:text="${#numbers.formatDecimal(item.price * item.quantity, 0, 'COMMA', 0, 'POINT')} + 'đ'">0đ</td>	
+						<!-- ĐÃ NÂNG CẤP: Nút Cộng Trừ Số Lượng -->
+						<td class="p-5 text-center font-bold text-gray-900">
+						    <div class="flex items-center justify-center gap-2">
+						        <!-- Nút Trừ (-) -->
+						        <a th:href="@{/cart/decrease/{id}(id=${item.id})}" class="w-8 h-8 flex items-center justify-center bg-gray-100 hover:bg-red-50 hover:text-red-600 rounded-lg text-gray-600 font-bold transition duration-200">
+						            -
+						        </a>
+						        
+						        <!-- Hiển thị số lượng -->
+						        <span class="bg-gray-50 border border-gray-100 px-4 py-1.5 rounded-lg w-12 text-center block" th:text="${item.quantity}">1</span>
+						        
+						        <!-- Nút Cộng (+) -->
+						        <a th:href="@{/cart/increase/{id}(id=${item.id})}" class="w-8 h-8 flex items-center justify-center bg-gray-100 hover:bg-blue-50 hover:text-blue-600 rounded-lg text-gray-600 font-bold transition duration-200">
+						            +
+						        </a>
+						    </div>
+						</td>
                         
                         <td class="p-5 text-center font-black text-blue-600 text-lg" th:text="${#numbers.formatDecimal(item.subTotal, 0, 'COMMA', 0, 'POINT')} + 'đ'">0đ</td>
+                        
+                        <!-- Cột chứa nút Xóa -->
+                        <td class="p-5 text-center">
+                            <!-- Gọi đến đường dẫn /cart/remove/{id} -->
+                            <a th:href="@{/cart/remove/{id}(id=${item.id})}" class="inline-flex items-center gap-1 text-red-500 hover:text-red-700 font-bold bg-red-50 hover:bg-red-100 px-3 py-2 rounded-xl transition duration-200 text-sm">
+                                🗑️ Xóa
+                            </a>
+                        </td>
                     </tr>
                 </tbody>
             </table>

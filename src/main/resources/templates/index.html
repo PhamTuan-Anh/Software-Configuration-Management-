@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,127 +8,204 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; }
-        /* Xóa gạch chân mặc định của thẻ a khi làm nút bấm */
         a { text-decoration: none; }
     </style>
 </head>
 <body class="bg-gray-50 min-h-screen">
 
     <header class="bg-white border-b px-8 py-4 flex justify-between items-center sticky top-0 z-50 shadow-sm">
-        <div class="flex items-center gap-2 cursor-pointer">
+        <a th:href="@{/}" class="flex items-center gap-2 cursor-pointer text-decoration-none">
             <div class="bg-gray-900 text-white w-10 h-10 rounded-lg flex items-center justify-center font-black text-xl">PC</div>
             <span class="text-2xl font-bold text-gray-900">TechStore</span>
-        </div>
+        </a>
         
-        <div class="flex-1 max-w-xl mx-10 hidden lg:block">
+        <form th:action="@{/shop}" method="get" class="flex-1 max-w-xl mx-10 hidden lg:block">
             <div class="relative">
                 <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
                     <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
                 </span>
-                <input type="text" class="block w-full pl-10 pr-3 py-2 border border-gray-200 rounded-xl leading-5 bg-gray-50 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition" placeholder="Tìm kiếm linh kiện...">
+                <input type="text" name="keyword" class="block w-full pl-10 pr-3 py-2 border border-gray-200 rounded-xl leading-5 bg-gray-50 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition" placeholder="Tìm kiếm linh kiện... (Nhấn Enter để tìm)">
             </div>
-        </div>
+        </form>
 
         <div class="flex gap-6 items-center">
             <button class="flex items-center gap-1.5 font-bold text-gray-600 hover:text-blue-600 transition">
                 <span class="text-blue-600">🤖</span> AI Tư vấn
             </button>
             
-            <a th:href="@{/cart}" class="text-gray-400 hover:text-gray-900 transition relative block">
+            <a th:href="@{/cart}" class="text-gray-400 hover:text-gray-900 transition relative block text-decoration-none" id="cart-icon-link">
                 <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                 <span th:if="${cartCount != null and cartCount > 0}" th:text="${cartCount}" class="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center">0</span>
             </a>
             
             <div th:if="${username == null}" class="flex items-center gap-4">
-                <a th:href="@{/login}" class="font-bold text-gray-700 hover:text-blue-600">Đăng nhập</a>
-                <a th:href="@{/register}" class="bg-blue-600 text-white px-6 py-2 rounded-full font-bold hover:bg-blue-700 transition shadow-lg shadow-blue-200">
-                    Đăng ký
-                </a>
+                <a th:href="@{/login}" class="font-bold text-gray-700 hover:text-blue-600 text-decoration-none">Đăng nhập</a>
+                <a th:href="@{/register}" class="bg-blue-600 text-white px-6 py-2 rounded-full font-bold hover:bg-blue-700 transition shadow-lg shadow-blue-200 text-decoration-none">Đăng ký</a>
             </div>
 
-            <div th:if="${username != null}" class="flex items-center gap-3">
-                <span class="font-bold text-blue-600">Chào, [[${username}]]!</span>
-                <a th:href="@{/logout}" class="text-xs text-red-400 underline hover:text-red-600 transition">Thoát</a>
+            <div th:if="${username != null}" class="flex items-center">
+                <button id="user-menu-btn" class="flex items-center gap-2 p-1.5 pr-4 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-full transition duration-300">
+                    <div class="w-9 h-9 bg-blue-600 text-white rounded-full flex items-center justify-center font-black">
+                        <span th:text="${#strings.substring(username,0,1).toUpperCase()}">U</span>
+                    </div>
+                    <span class="font-bold text-gray-700 text-sm" th:text="${username}">User</span>
+                </button>
             </div>
         </div>
     </header>
 
     <main class="max-w-7xl mx-auto px-6 py-12">
-        
+        <!-- Hero section giữ nguyên -->
         <div class="flex flex-col lg:flex-row items-center justify-between gap-12 mb-32 mt-10 max-w-6xl mx-auto px-4">
-            
-            <div class="flex-1 max-w-lg">
-                <h1 class="text-6xl lg:text-7xl font-black text-gray-900 leading-[1.1] mb-8 tracking-tighter">
-                    Xây dựng PC <br>
-                    <span class="text-blue-600">cùng AI</span>
-                </h1>
-                <p class="text-gray-500 text-xl mb-10 leading-relaxed">
-                    Trợ lý ảo giúp bạn chọn linh kiện phù hợp nhất với ngân sách và nhu cầu của mình.
-                </p>
-                
+            <div class="flex-1 max-lg">
+                <h1 class="text-6xl lg:text-7xl font-black text-gray-900 leading-[1.1] mb-8 tracking-tighter">Xây dựng PC <br><span class="text-blue-600">cùng AI</span></h1>
+                <p class="text-gray-500 text-xl mb-10 leading-relaxed">Trợ lý ảo giúp bạn chọn linh kiện phù hợp nhất với ngân sách và nhu cầu của mình.</p>
                 <div class="flex gap-4">
-                    <button class="bg-black text-white px-8 py-4 rounded-2xl font-bold hover:scale-105 transition shadow-2xl flex items-center gap-2">
-                        <span class="text-xl">💬</span> Chat ngay
-                    </button>
-                    <a th:href="@{/shop}" class="bg-white border border-gray-200 text-gray-900 px-8 py-4 rounded-2xl font-bold hover:bg-gray-50 transition shadow-sm text-center flex items-center justify-center text-decoration-none">
-                        Xem linh kiện
-                    </a>
+                    <button class="bg-black text-white px-8 py-4 rounded-2xl font-bold hover:scale-105 transition shadow-2xl flex items-center gap-2"><span class="text-xl">💬</span> Chat ngay</button>
+                    <a th:href="@{/shop}" class="bg-white border border-gray-200 text-gray-900 px-8 py-4 rounded-2xl font-bold hover:bg-gray-50 transition shadow-sm text-center flex items-center justify-center text-decoration-none">Xem linh kiện</a>
                 </div>
             </div>
-
+            <!-- Features side -->
             <div class="lg:w-1/2 flex justify-center lg:justify-end">
                 <div class="flex flex-col gap-6">
-                    
 					<div class="flex flex-row gap-4 lg:gap-6 items-start">
-					    
 					    <div class="bg-white p-7 rounded-[32px] shadow-xl shadow-gray-100 border border-gray-50 w-[270px] shrink-0 hover:-translate-y-2 transition duration-300 cursor-pointer group">
 					        <div class="bg-purple-50 w-12 h-12 rounded-2xl flex items-center justify-center mb-5 text-2xl group-hover:scale-110 transition">⚙️</div>
 					        <h3 class="font-bold text-gray-900 text-lg mb-2">Tư vấn cấu hình</h3>
 					        <p class="text-sm text-gray-500 leading-relaxed">Gợi ý linh kiện theo ngân sách.</p>
 					    </div>
-
 					    <div class="bg-white p-7 rounded-[32px] shadow-xl shadow-gray-100 border border-gray-50 w-[270px] shrink-0 hover:-translate-y-2 transition duration-300 cursor-pointer group">
 					        <div class="bg-blue-50 w-12 h-12 rounded-2xl flex items-center justify-center mb-5 text-2xl group-hover:scale-110 transition">🔧</div>
 					        <h3 class="font-bold text-gray-900 text-lg mb-2">Hỗ trợ sửa chữa</h3>
 					        <p class="text-sm text-gray-500 leading-relaxed">Chẩn đoán lỗi phần cứng.</p>
 					    </div>
-					    
 					</div>
-                    <div class="flex items-center gap-2 text-sm font-semibold text-gray-400 ml-4 mt-2">
-                        <span class="flex h-2.5 w-2.5 rounded-full bg-green-500 animate-pulse"></span>
-                        AI đang sẵn sàng hỗ trợ
-                    </div>
-
                 </div>
             </div>
         </div> 
-        
-        <h2 class="text-2xl font-bold mb-8 flex items-center gap-2">
-            <div class="w-1.5 h-6 bg-blue-600 rounded-full"></div>
-            Danh sách Linh kiện
-        </h2>
-        
+
+        <h2 class="text-2xl font-bold mb-8 flex items-center gap-2"><div class="w-1.5 h-6 bg-blue-600 rounded-full"></div>Danh sách Linh kiện</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            <div th:each="product : ${products}" class="bg-white border border-gray-100 rounded-2xl p-5 hover:shadow-xl transition-all duration-300 group cursor-pointer">
-                
+            <div th:each="product : ${products}" class="bg-white border border-gray-100 rounded-2xl p-5 hover:shadow-xl transition-all duration-300 group cursor-pointer flex flex-col h-full">
                 <a th:href="@{/product/{id}(id=${product.id})}" class="block h-48 bg-gray-50 rounded-xl mb-4 overflow-hidden flex items-center justify-center p-4">
                     <img th:src="${product.imageUrl}" alt="Product" class="max-h-full object-contain mix-blend-multiply group-hover:scale-110 transition duration-300" />
                 </a>
-                
-                <a th:href="@{/product/{id}(id=${product.id})}">
+                <a th:href="@{/product/{id}(id=${product.id})}" class="text-decoration-none">
                     <h3 class="font-bold text-sm text-gray-900 line-clamp-2 min-h-[40px] mb-2 hover:text-blue-600 transition" th:text="${product.name}">Tên sản phẩm</h3>
                 </a>
-                
                 <div class="mt-auto pt-3 flex items-center justify-between border-t border-dashed border-gray-200">
                     <span class="text-lg font-black text-blue-600" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + 'đ'">0đ</span>
-                    
-                    <a th:href="@{/cart/add/{id}(id=${product.id})}" class="bg-gray-100 text-gray-900 w-10 h-10 rounded-xl hover:bg-black hover:text-white transition flex items-center justify-center font-bold text-xl">+</a>
+                    <a th:href="@{/cart/add/{id}(id=${product.id})}" class="add-to-cart-btn bg-gray-100 text-gray-900 w-10 h-10 rounded-xl hover:bg-black hover:text-white transition flex items-center justify-center font-bold text-xl text-decoration-none">+</a>
                 </div>
-                
             </div>
         </div>
-        
     </main>
 
+    <!-- SIDEBAR -->
+    <div th:if="${username != null}">
+        <div id="sidebar-overlay" class="fixed inset-0 bg-black/40 z-[60] hidden opacity-0 transition-opacity duration-300 backdrop-blur-sm"></div>
+        <div id="user-sidebar" class="fixed inset-y-0 left-0 w-[320px] bg-white z-[70] transform -translate-x-full transition-transform duration-300 shadow-2xl flex flex-col">
+            <div class="p-6 border-b border-gray-100 bg-gray-50 flex justify-between items-start">
+                <div class="flex items-center gap-4">
+                    <div class="w-14 h-14 bg-blue-600 text-white rounded-full flex items-center justify-center font-black text-2xl shadow-md">
+                        <span th:text="${#strings.substring(username,0,1).toUpperCase()}">U</span>
+                    </div>
+                    <div>
+                        <div class="font-black text-gray-900 text-lg" th:text="${username}">Username</div>
+                        <div class="text-xs font-bold text-blue-600 bg-blue-100 px-2 py-1 rounded-md mt-1 inline-block">Thành viên VIP</div>
+                    </div>
+                </div>
+                <button id="close-sidebar-btn" class="text-gray-400 hover:text-red-500 bg-white p-1 rounded-lg shadow-sm transition">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            
+            <div class="p-4 flex-1 flex flex-col gap-2 overflow-y-auto">
+                <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 ml-2 mt-4">Quản lý cá nhân</h4>
+                <!-- ĐÃ SỬA href="#" THÀNH th:href="@{/profile}" -->
+                <a th:href="@{/profile}" class="flex items-center gap-3 p-3.5 rounded-xl hover:bg-blue-50 hover:text-blue-600 font-bold text-gray-700 transition text-decoration-none group">
+                    <span class="text-xl group-hover:scale-110 transition">👤</span> Thông tin cá nhân
+                </a>
+                <!-- ĐÃ SỬA href="#" THÀNH th:href="@{/orders}" -->
+                <a th:href="@{/orders}" class="flex items-center gap-3 p-3.5 rounded-xl hover:bg-blue-50 hover:text-blue-600 font-bold text-gray-700 transition text-decoration-none group">
+                    <span class="text-xl group-hover:scale-110 transition">📦</span> Lịch sử mua hàng
+                </a>
+                <a href="#" class="flex items-center gap-3 p-3.5 rounded-xl hover:bg-blue-50 hover:text-blue-600 font-bold text-gray-700 transition text-decoration-none group">
+                    <span class="text-xl group-hover:scale-110 transition">❤️</span> Sản phẩm yêu thích
+                </a>
+                <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 ml-2 mt-6">Cài đặt</h4>
+                <a href="#" class="flex items-center gap-3 p-3.5 rounded-xl hover:bg-gray-100 font-bold text-gray-700 transition text-decoration-none group">
+                    <span class="text-xl group-hover:rotate-90 transition duration-300">⚙️</span> Cài đặt tài khoản
+                </a>
+            </div>
+
+            <div class="p-6 border-t border-gray-100 bg-gray-50">
+                <a th:href="@{/logout}" class="flex items-center justify-center gap-2 w-full py-4 rounded-xl bg-red-100 text-red-600 hover:bg-red-600 hover:text-white font-black transition duration-300 text-decoration-none shadow-sm">🚪 Đăng xuất ngay</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // FIX LỖI: Chỉ chặn event với nút Thêm giỏ hàng (class add-to-cart-btn)
+            const addButtons = document.querySelectorAll('.add-to-cart-btn');
+            addButtons.forEach(button => {
+                button.addEventListener('click', function(event) {
+                    event.preventDefault(); 
+                    const originalUrl = this.getAttribute('href'); 
+                    const apiUrl = originalUrl.replace('/cart/add/', '/api/cart/add/');
+                    const originalHTML = this.innerHTML;
+                    this.innerHTML = "⏳";
+                    
+                    fetch(apiUrl)
+                    .then(response => response.text())
+                    .then(count => {
+                        const cartLink = document.getElementById('cart-icon-link');
+                        let bubble = cartLink.querySelector('span');
+                        if (bubble) bubble.innerText = count;
+                        else {
+                            const newBubble = document.createElement('span');
+                            newBubble.className = "absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center";
+                            newBubble.innerText = count;
+                            cartLink.appendChild(newBubble);
+                        }
+                        this.innerHTML = "✔";
+                        this.style.backgroundColor = "#22c55e"; 
+                        this.style.color = "white";
+                        setTimeout(() => {
+                            this.innerHTML = originalHTML;
+                            this.style.backgroundColor = ""; 
+                            this.style.color = "";
+                        }, 1000);
+                    });
+                });
+            });
+
+            // SIDEBAR LOGIC
+            const userBtn = document.getElementById('user-menu-btn');
+            const userSidebar = document.getElementById('user-sidebar');
+            const sidebarOverlay = document.getElementById('sidebar-overlay');
+            const closeSidebarBtn = document.getElementById('close-sidebar-btn');
+
+            if (userBtn) {
+                userBtn.addEventListener('click', () => {
+                    sidebarOverlay.classList.remove('hidden');
+                    setTimeout(() => sidebarOverlay.classList.remove('opacity-0'), 10);
+                    userSidebar.classList.remove('-translate-x-full');
+                    document.body.style.overflow = 'hidden';
+                });
+
+                const close = () => {
+                    userSidebar.classList.add('-translate-x-full');
+                    sidebarOverlay.classList.add('opacity-0');
+                    document.body.style.overflow = '';
+                    setTimeout(() => sidebarOverlay.classList.add('hidden'), 300);
+                };
+
+                closeSidebarBtn.addEventListener('click', close);
+                sidebarOverlay.addEventListener('click', close);
+            }
+        });
+    </script>
 </body>
 </html>

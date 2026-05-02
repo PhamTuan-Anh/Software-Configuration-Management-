@@ -6,22 +6,51 @@
     <title th:text="${product.name} + ' - TechStore'">Chi tiết sản phẩm</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
-    <style> body { font-family: 'Inter', sans-serif; } </style>
+    <style> body { font-family: 'Inter', sans-serif; } a { text-decoration: none; } </style>
 </head>
 <body class="bg-gray-50 min-h-screen">
 
-    <header class="bg-white border-b px-8 py-4 flex justify-between items-center shadow-sm">
-        <a th:href="@{/}" class="flex items-center gap-2 text-decoration-none hover:opacity-80 transition">
+    <!-- HEADER: Đã đồng bộ thanh Search, Giỏ hàng và Tài khoản -->
+    <header class="bg-white border-b px-8 py-4 flex justify-between items-center sticky top-0 z-50 shadow-sm">
+        <a th:href="@{/}" class="flex items-center gap-2 cursor-pointer text-decoration-none hover:opacity-80 transition">
             <div class="bg-gray-900 text-white w-10 h-10 rounded-lg flex items-center justify-center font-black text-xl">PC</div>
             <span class="text-2xl font-bold text-gray-900">TechStore</span>
         </a>
-        <a th:href="@{/cart}" class="text-gray-600 hover:text-blue-600 font-bold flex items-center gap-2">
-            🛒 Giỏ hàng
-        </a>
+        
+        <!-- Form Tìm kiếm -->
+        <form th:action="@{/shop}" method="get" class="flex-1 max-w-xl mx-10 hidden lg:block">
+            <div class="relative">
+                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
+                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                </span>
+                <input type="text" name="keyword" class="block w-full pl-10 pr-3 py-2 border border-gray-200 rounded-xl leading-5 bg-gray-50 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition" placeholder="Tìm kiếm linh kiện... (Nhấn Enter để tìm)">
+            </div>
+        </form>
+
+        <div class="flex gap-6 items-center">
+            <button class="flex items-center gap-1.5 font-bold text-gray-600 hover:text-blue-600 transition">
+                <span class="text-blue-600">🤖</span> AI Tư vấn
+            </button>
+            
+            <a th:href="@{/cart}" class="text-gray-400 hover:text-gray-900 transition relative block">
+                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                <span th:if="${cartCount != null and cartCount > 0}" th:text="${cartCount}" class="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center">0</span>
+            </a>
+            
+            <div th:if="${username == null}" class="flex items-center gap-4">
+                <a th:href="@{/login}" class="font-bold text-gray-700 hover:text-blue-600 text-decoration-none">Đăng nhập</a>
+                <a th:href="@{/register}" class="bg-blue-600 text-white px-6 py-2 rounded-full font-bold hover:bg-blue-700 transition shadow-lg shadow-blue-200 text-decoration-none">Đăng ký</a>
+            </div>
+
+            <div th:if="${username != null}" class="flex items-center gap-3">
+                <span class="font-bold text-blue-600">Chào, [[${username}]]!</span>
+                <a th:href="@{/logout}" class="text-xs text-red-400 underline hover:text-red-600 transition">Thoát</a>
+            </div>
+        </div>
     </header>
 
     <main class="max-w-5xl mx-auto px-6 py-12">
-        <a th:href="@{/}" class="inline-flex items-center gap-2 text-gray-500 hover:text-blue-600 mb-8 font-semibold transition">
+        <a th:href="@{/}" class="inline-flex items-center gap-2 text-gray-500 hover:text-blue-600 mb-8 font-semibold transition text-decoration-none">
             <span>←</span> Trở về danh sách
         </a>
 
@@ -69,7 +98,7 @@
                         <div class="text-gray-500 leading-relaxed text-sm space-y-2" th:utext="${product.description != null ? product.description : 'Đang cập nhật mô tả chi tiết cho sản phẩm này...'}"></div>
                     </div>
 
-                    <a th:href="@{/cart/add/{id}(id=${product.id})}" class="bg-black text-white px-8 py-4 rounded-2xl font-bold hover:scale-105 transition shadow-2xl flex items-center justify-center gap-3 text-lg cursor-pointer text-center">
+                    <a th:href="@{/cart/add/{id}(id=${product.id})}" class="bg-black text-white px-8 py-4 rounded-2xl font-bold hover:scale-105 transition shadow-2xl flex items-center justify-center gap-3 text-lg cursor-pointer text-center text-decoration-none">
                         <span>+</span> Thêm vào giỏ hàng
                     </a>
                 </div>

@@ -28,12 +28,12 @@ public class CartService {
     }
 
     // 2. Xóa món hàng khỏi giỏ
-    public void remove(Long productId) {
-        cart.remove(productId);
+    public void remove(Long id) {
+        cart.remove(id); 
     }
 
-    // 3. Lấy toàn bộ danh sách hàng trong giỏ ra để hiển thị lên web
-    public Collection<CartItem> getCartItems() {
+    // 3. Đổi thành getAllItems để khớp với Controller
+    public Collection<CartItem> getAllItems() {
         return cart.values();
     }
 
@@ -46,11 +46,12 @@ public class CartService {
         return count;
     }
 
-    // 5. Tính tổng số tiền phải thanh toán
+    // 5. Tính tổng số tiền phải thanh toán (Đã an toàn hóa công thức tính)
     public double getAmount() {
         double total = 0;
         for (CartItem item : cart.values()) {
-            total += item.getSubTotal();
+            // Nhân trực tiếp giá với số lượng để tránh lỗi thiếu biến subTotal
+            total += (item.getPrice() * item.getQuantity());
         }
         return total;
     }
@@ -58,5 +59,31 @@ public class CartService {
     // 6. Xóa sạch giỏ hàng (Dùng khi đã thanh toán xong)
     public void clear() {
         cart.clear();
+    }
+
+    // --------------------------------------------------------
+    // CÁC HÀM MỚI BỔ SUNG ĐỂ XỬ LÝ NÚT CỘNG/TRỪ SỐ LƯỢNG
+    // --------------------------------------------------------
+
+    // 7. Tăng số lượng lên 1 (+)
+    public void increase(Long id) {
+        CartItem item = cart.get(id);
+        if (item != null) {
+            item.setQuantity(item.getQuantity() + 1);
+        }
+    }
+
+    // 8. Giảm số lượng đi 1 (-)
+    public void decrease(Long id) {
+        CartItem item = cart.get(id);
+        if (item != null) {
+            if (item.getQuantity() > 1) {
+                // Nếu số lượng > 1 thì trừ đi 1
+                item.setQuantity(item.getQuantity() - 1);
+            } else {
+                // Nếu đang bằng 1 mà bấm trừ tiếp thì xóa luôn món đồ đó
+                cart.remove(id);
+            }
+        }
     }
 }
