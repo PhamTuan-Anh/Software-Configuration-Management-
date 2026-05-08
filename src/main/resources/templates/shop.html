@@ -8,16 +8,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style> body { font-family: 'Inter', sans-serif; } a { text-decoration: none; } </style>
 </head>
-<body class="bg-gray-50 min-h-screen">
+<body class="bg-gray-50 min-h-screen relative">
 
-    <!-- HEADER -->
     <header class="bg-white border-b px-8 py-4 flex justify-between items-center sticky top-0 z-50 shadow-sm">
         <a th:href="@{/}" class="flex items-center gap-2 cursor-pointer text-decoration-none">
             <div class="bg-gray-900 text-white w-10 h-10 rounded-lg flex items-center justify-center font-black text-xl">PC</div>
             <span class="text-2xl font-bold text-gray-900">TechStore</span>
         </a>
         
-        <!-- Form Tìm kiếm -->
         <form th:action="@{/shop}" method="get" class="flex-1 max-w-xl mx-10 hidden lg:block">
             <div class="relative">
                 <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400">
@@ -28,23 +26,20 @@
         </form>
 
         <div class="flex gap-6 items-center">
-            <button class="flex items-center gap-1.5 font-bold text-gray-600 hover:text-blue-600 transition">
+            <button id="header-chat-btn" class="flex items-center gap-1.5 font-bold text-gray-600 hover:text-blue-600 transition">
                 <span class="text-blue-600">🤖</span> AI Tư vấn
             </button>
 
-            <!-- Nút Giỏ Hàng -->
             <a th:href="@{/cart}" class="text-gray-400 hover:text-gray-900 transition relative block text-decoration-none" id="cart-icon-link">
                 <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                 <span th:if="${cartCount != null and cartCount > 0}" th:text="${cartCount}" class="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold h-4 w-4 rounded-full flex items-center justify-center">0</span>
             </a>
             
-            <!-- CHƯA ĐĂNG NHẬP -->
             <div th:if="${username == null}" class="flex items-center gap-4">
                 <a th:href="@{/login}" class="font-bold text-gray-700 hover:text-blue-600 text-decoration-none">Đăng nhập</a>
                 <a th:href="@{/register}" class="bg-blue-600 text-white px-6 py-2 rounded-full font-bold hover:bg-blue-700 transition shadow-lg shadow-blue-200 text-decoration-none">Đăng ký</a>
             </div>
 
-            <!-- ĐÃ ĐĂNG NHẬP -->
             <div th:if="${username != null}" class="flex items-center">
                 <button id="user-menu-btn" class="flex items-center gap-2 p-1.5 pr-4 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-full transition duration-300">
                     <div class="w-9 h-9 bg-blue-600 text-white rounded-full flex items-center justify-center font-black">
@@ -58,7 +53,6 @@
 
     <main class="max-w-7xl mx-auto px-6 py-12 flex gap-8">
         
-        <!-- CỘT TRÁI: DANH MỤC -->
         <aside class="w-1/4 bg-white rounded-3xl p-6 border border-gray-100 shadow-sm h-fit sticky top-28">
             <h3 class="font-black text-xl text-gray-900 mb-6 flex items-center gap-2">
                 <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"></path></svg>
@@ -80,26 +74,31 @@
             </div>
         </aside>
 
-        <!-- HIỂN THỊ SẢN PHẨM -->
         <div class="w-3/4">
             <h2 class="text-3xl font-black mb-8 text-gray-900" th:text="${currentCategory}">Tất cả sản phẩm</h2>
             
             <div th:if="${#lists.isEmpty(products)}" class="bg-white p-12 rounded-3xl text-center border border-gray-100 shadow-sm">
                 <div class="text-5xl mb-4">🥲</div>
                 <h3 class="text-xl font-bold text-gray-900">Không tìm thấy sản phẩm nào!</h3>
+                <p class="text-gray-500 mt-2">Thử gõ một từ khóa khác xem sao (Ví dụ: RTX, i5, Asus...).</p>
             </div>
 
             <div th:if="${not #lists.isEmpty(products)}" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <div th:each="product : ${products}" class="bg-white border border-gray-100 rounded-3xl p-5 hover:shadow-xl transition-all duration-300 group cursor-pointer flex flex-col h-full">
+                    
                     <a th:href="@{/product/{id}(id=${product.id})}" class="block h-48 bg-gray-50 rounded-2xl mb-4 overflow-hidden flex items-center justify-center p-4">
                         <img th:src="${product.imageUrl}" alt="Product" class="max-h-full object-contain mix-blend-multiply group-hover:scale-110 transition duration-300" />
                     </a>
+                    
                     <div class="text-xs font-bold text-blue-600 mb-2 uppercase tracking-wider" th:text="${product.category}">Danh mục</div>
+                    
                     <a th:href="@{/product/{id}(id=${product.id})}" class="text-decoration-none">
                         <h3 class="font-bold text-gray-900 line-clamp-2 min-h-[48px] mb-2 hover:text-blue-600 transition" th:text="${product.name}">Tên sản phẩm</h3>
                     </a>
+                    
                     <div class="mt-auto pt-4 flex items-center justify-between border-t border-dashed border-gray-100">
                         <span class="text-xl font-black text-gray-900" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + 'đ'">0đ</span>
+                        
                         <a th:href="@{/cart/add/{id}(id=${product.id})}" class="add-to-cart-btn bg-blue-50 text-blue-600 w-10 h-10 rounded-xl hover:bg-blue-600 hover:text-white transition flex items-center justify-center font-bold text-xl text-decoration-none">+</a>
                     </div>
                 </div>
@@ -107,9 +106,9 @@
         </div>
     </main>
 
-    <!-- SIDEBAR NGƯỜI DÙNG -->
     <div th:if="${username != null}">
         <div id="sidebar-overlay" class="fixed inset-0 bg-black/40 z-[60] hidden opacity-0 transition-opacity duration-300 backdrop-blur-sm"></div>
+
         <div id="user-sidebar" class="fixed inset-y-0 left-0 w-[320px] bg-white z-[70] transform -translate-x-full transition-transform duration-300 shadow-2xl flex flex-col">
             <div class="p-6 border-b border-gray-100 bg-gray-50 flex justify-between items-start">
                 <div class="flex items-center gap-4">
@@ -148,6 +147,47 @@
                     🚪 Đăng xuất ngay
                 </a>
             </div>
+        </div>
+    </div>
+
+    <div id="chat-toggle" class="fixed bottom-6 right-6 z-[100] cursor-pointer group">
+        <div class="bg-blue-600 text-white w-14 h-14 rounded-2xl flex items-center justify-center shadow-2xl group-hover:scale-110 transition duration-300">
+            <span class="text-2xl">🤖</span>
+        </div>
+        <div class="absolute right-16 bottom-2 bg-white px-4 py-2 rounded-xl shadow-lg border border-gray-100 text-sm font-bold text-gray-700 opacity-0 group-hover:opacity-100 transition duration-300 whitespace-nowrap pointer-events-none">
+            Chat với AI tư vấn
+        </div>
+    </div>
+
+    <div id="ai-chat-window" class="fixed bottom-24 right-6 w-[380px] h-[500px] bg-white rounded-[24px] shadow-2xl z-[100] border border-gray-100 flex flex-col hidden transition-all duration-300 transform translate-y-10 opacity-0 overflow-hidden">
+        <div class="bg-gray-900 p-4 text-white flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-xl">🤖</div>
+                <div>
+                    <div class="font-black text-sm uppercase tracking-wider">TechStore AI</div>
+                    <div class="text-[10px] text-green-400 flex items-center gap-1 font-bold">
+                        <span class="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse"></span> Đang trực tuyến
+                    </div>
+                </div>
+            </div>
+            <button id="close-chat" class="text-gray-400 hover:text-white transition text-2xl font-bold">&times;</button>
+        </div>
+
+        <div id="chat-content" class="flex-1 p-5 overflow-y-auto space-y-4 bg-gray-50 flex flex-col">
+            <div class="flex gap-2 items-start">
+                <div class="bg-white border border-gray-100 text-gray-800 p-3 rounded-2xl rounded-tl-none text-sm shadow-sm max-w-[85%] font-medium">
+                    Chào bạn! Mình là chuyên gia tư vấn của TechStore. Bạn cần build PC bao nhiêu tiền hay máy đang gặp lỗi gì không?
+                </div>
+            </div>
+        </div>
+
+        <div class="p-3 bg-white border-t border-gray-100">
+            <form id="chat-form" class="relative flex items-center">
+                <input type="text" id="chat-input" autocomplete="off" class="w-full pl-4 pr-12 py-3 bg-gray-100 border-none rounded-xl focus:ring-2 focus:ring-blue-500 text-sm font-medium outline-none transition" placeholder="Nhập câu hỏi...">
+                <button type="submit" class="absolute right-2 w-9 h-9 bg-blue-600 text-white rounded-lg flex items-center justify-center hover:bg-blue-700 transition shadow-md">
+                    <svg class="w-4 h-4 translate-x-[-1px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                </button>
+            </form>
         </div>
     </div>
 
@@ -208,6 +248,89 @@
                 userBtn.addEventListener('click', openSidebar);
                 closeSidebarBtn.addEventListener('click', closeSidebar);
                 sidebarOverlay.addEventListener('click', closeSidebar);
+            }
+
+            // 3. CHỨC NĂNG AI CHAT
+            const chatToggle = document.getElementById('chat-toggle');
+            const chatWindow = document.getElementById('ai-chat-window');
+            const closeChat = document.getElementById('close-chat');
+            const chatForm = document.getElementById('chat-form');
+            const chatInput = document.getElementById('chat-input');
+            const chatContent = document.getElementById('chat-content');
+            
+            // Nút phụ trên Header để mở chat
+            const headerChatBtn = document.getElementById('header-chat-btn');
+
+            const openChatWindow = () => {
+                chatWindow.classList.remove('hidden');
+                setTimeout(() => chatWindow.classList.remove('translate-y-10', 'opacity-0'), 10);
+                chatInput.focus();
+            };
+
+            if(chatToggle) chatToggle.addEventListener('click', openChatWindow);
+            if(headerChatBtn) headerChatBtn.addEventListener('click', openChatWindow);
+
+            if(closeChat) {
+                closeChat.addEventListener('click', () => {
+                    chatWindow.classList.add('translate-y-10', 'opacity-0');
+                    setTimeout(() => chatWindow.classList.add('hidden'), 300);
+                });
+            }
+
+            if(chatForm) {
+                chatForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const msg = chatInput.value.trim();
+                    if(!msg) return;
+
+                    // Hiện tin nhắn của người dùng
+                    chatContent.innerHTML += `
+                        <div class="flex justify-end mt-2">
+                            <div class="bg-blue-600 text-white p-3 rounded-2xl rounded-tr-none text-sm shadow-md max-w-[85%] font-medium">
+                                ${msg}
+                            </div>
+                        </div>`;
+                    
+                    chatInput.value = '';
+                    chatContent.scrollTop = chatContent.scrollHeight;
+
+                    // Thêm hiệu ứng "AI đang gõ..."
+                    const typingId = 'typing-' + Date.now();
+                    chatContent.innerHTML += `
+                        <div id="${typingId}" class="flex gap-2 items-start mt-2">
+                            <div class="bg-white border border-gray-100 text-gray-500 p-3 rounded-2xl rounded-tl-none text-sm shadow-sm">
+                                <span class="animate-pulse">⏳ Đang suy nghĩ...</span>
+                            </div>
+                        </div>`;
+                    chatContent.scrollTop = chatContent.scrollHeight;
+
+                    // Gọi xuống Backend
+                    fetch('/api/ai/chat?message=' + encodeURIComponent(msg))
+                        .then(res => res.text())
+                        .then(reply => {
+                            document.getElementById(typingId).remove();
+                            
+                            // Parse bôi đậm và xuống dòng
+                            const formattedReply = reply.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+
+                            chatContent.innerHTML += `
+                                <div class="flex gap-2 items-start mt-2">
+                                    <div class="bg-white border border-gray-100 text-gray-800 p-3 rounded-2xl rounded-tl-none text-sm shadow-sm max-w-[85%] font-medium leading-relaxed">
+                                        ${formattedReply}
+                                    </div>
+                                </div>`;
+                            chatContent.scrollTop = chatContent.scrollHeight;
+                        })
+                        .catch(err => {
+                            document.getElementById(typingId).remove();
+                            chatContent.innerHTML += `
+                                <div class="flex gap-2 items-start mt-2">
+                                    <div class="bg-red-50 border border-red-100 text-red-600 p-3 rounded-2xl rounded-tl-none text-sm shadow-sm max-w-[85%] font-medium">
+                                        ❌ Lỗi kết nối. Vui lòng kiểm tra lại Key hoặc Internet!
+                                    </div>
+                                </div>`;
+                        });
+                });
             }
         });
     </script>
